@@ -1,0 +1,58 @@
+/*
+Question 2: HashMap 
+Create a Java program that uses a HashMap to store employee IDs (Integer) as keys and their 
+names (String) as values. Write methods to: 
+1. Add an employee to the map. 
+2. Retrieve an employee's name by ID. 
+3. Throw a custom exception if the ID is not found. 
+4. Display all employees in the format "ID: Name".
+*/
+
+import java.util.*;
+
+class IdNotFoundException extends Exception {
+    public EmployeeNotFoundException(String message) {
+        super(message);
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws Exception{
+        Scanner sc = new Scanner(System.in);
+        HashMap<Integer, String> map = new HashMap<>();
+        int choice;
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Employee ID: ");
+                    int id = sc.nextInt();
+                    System.out.print("Enter Employee Name: ");
+                    String name = sc.next();
+                    map.put(id, name);
+                    System.out.println("Employee added!");
+                    break;
+
+                case 2:
+                    System.out.print("Enter Employee ID to retrieve: ");
+                    int searchId = sc.nextInt();
+                    if (!map.containsKey(searchId)) {
+                        throw new EmployeeNotFoundException("Error: Employee ID not found!");
+                    }
+                    System.out.println("Name for ID " + searchId + ": " + map.get(searchId));
+                    break;
+
+                case 3:
+                    if (map.isEmpty()) {
+                        System.out.println("No employees to display.");
+                    } else {
+                        System.out.println("Employee Map: " + map);
+                    }
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+    }
+}
