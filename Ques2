@@ -1,0 +1,78 @@
+/*
+Question 4: HashMap and Exception Handling 
+Write a Java program that uses a HashMap to store product IDs (String) and their prices 
+(Double). Implement a method to apply a discount to a product's price based on a percentage 
+input. Handle the following cases: 
+1. Throw a custom exception if the product ID doesn't exist. 
+2. Throw an IllegalArgumentException if the discount percentage is negative or greater 
+than 100. 
+3. Update the price in the HashMap after applying the discount.
+*/
+
+
+import java.util.*;
+class ProductNotFoundException extends Exception {
+    public ProductNotFoundException(String message) {
+        super(message);
+    }
+}
+public class ProductDiscountApp {
+    private static HashMap<String, Double> productMap = new HashMap<>();
+    public static void applyDiscount(String productId, double discountPercent)
+            throws ProductNotFoundException, IllegalArgumentException {
+
+        if (!productMap.containsKey(productId)) {
+            throw new ProductNotFoundException("Error: Product ID not found!");
+        }
+        if (discountPercent < 0 || discountPercent > 100) {
+            throw new IllegalArgumentException("Error: Discount percentage must be between 0 and 100!");
+        }
+
+        double oldPrice = productMap.get(productId);
+        double newPrice = oldPrice - (oldPrice * discountPercent / 100.0);
+        productMap.put(productId, newPrice);
+        System.out.println("New price for " + productId + ": $" + newPrice);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        productMap.put("P001", 50.0);
+        productMap.put("P002", 100.0);
+        while (true) {
+            System.out.println("1. View Products");
+            System.out.println("2. Apply Discount");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("\nAvailable Products:");
+                    for (String id : productMap.keySet()) {
+                        System.out.println(id + " = $" + productMap.get(id));
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Enter Product ID: ");
+                    String id = sc.next();
+                    System.out.print("Enter Discount Percentage: ");
+                    double discount = sc.nextDouble();
+                    try {
+                        applyDiscount(id, discount);
+                    } catch (ProductNotFoundException | IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Exiting...");
+                    sc.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+}
